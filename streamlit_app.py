@@ -148,16 +148,39 @@ if ano_selecionado == "Todos":
     Ele permite observar tendências de melhoria ou queda nos indicadores de engajamento, aprendizagem e fatores psicossociais.
     """)
 
-    evolucao = df.groupby("Ano")[["IEG","IPS","IDA","IPV","IAN"]].mean().reset_index()
+    evolucao = df.groupby("Ano", as_index=False)[["IEG","IPS","IDA","IPV","IAN"]].mean()
+
+    # garantir texto/categoria
+    evolucao["Ano"] = evolucao["Ano"].astype(str)
+
+    # ordenar corretamente
+    ordem_anos = ["2022", "2023", "2024"]
+
+    evolucao["Ano"] = pd.Categorical(
+        evolucao["Ano"],
+        categories=ordem_anos,
+        ordered=True
+    )
+
+    evolucao = evolucao.sort_values("Ano")
 
     fig = px.line(
         evolucao,
         x="Ano",
         y=["IEG","IPS","IDA","IPV","IAN"],
-        markers=True
+        markers=True,
+        category_orders={"Ano": ordem_anos}
+    )
+
+    fig.update_xaxes(
+        type="category",
+        categoryorder="array",
+        categoryarray=ordem_anos,
+        title="Ano"
     )
 
     st.plotly_chart(fig,use_container_width=True)
+    
 
     # ==================================
     # ALUNOS ACOMPANHADOS
@@ -174,11 +197,10 @@ if ano_selecionado == "Todos":
         .rename(columns={"RA": "Quantidade de alunos"})
     )
 
-    # garantir texto/categoria
     alunos_ano["Ano"] = alunos_ano["Ano"].astype(str)
 
-    # ordenar corretamente
     ordem_anos = ["2022", "2023", "2024"]
+
     alunos_ano["Ano"] = pd.Categorical(
         alunos_ano["Ano"],
         categories=ordem_anos,
