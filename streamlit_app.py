@@ -313,8 +313,15 @@ st.plotly_chart(fig,use_container_width=True)
 st.header("Previsão de Risco Educacional")
 
 st.caption("""
-Utilizamos um modelo de Machine Learning para identificar alunos com maior probabilidade
-de apresentar dificuldades educacionais.
+Foi desenvolvido um modelo de **Machine Learning (Random Forest)** para prever o risco educacional dos alunos.
+
+O modelo utiliza indicadores como **engajamento (IEG), desempenho acadêmico (IDA), fatores psicossociais (IPS) e ponto de virada (IPV)**.
+
+Com base nesses indicadores, o modelo identifica padrões associados ao risco educacional e permite antecipar alunos que podem apresentar dificuldades de aprendizagem, auxiliando na priorização de intervenções pedagógicas.
+""")
+st.caption("""
+O modelo apresentou alta acurácia na identificação do risco educacional.
+Entretanto, é importante considerar que os resultados dependem da definição da variável de risco e da distribuição dos dados no conjunto analisado.
 """)
 
 df_ml = df.dropna(subset=["IAN","IEG","IPS","IDA","IPV"])
@@ -344,7 +351,10 @@ pred = model.predict(X_test)
 
 acc = accuracy_score(y_test,pred)
 
-st.metric("Acurácia do modelo",round(acc,2))
+st.metric(
+    "Acurácia do modelo",
+    f"{acc:.2%}"
+)
 
 st.text(classification_report(y_test,pred))
 
@@ -361,8 +371,15 @@ x="Variável",
 y="Importância",
 color="Variável",
 text="Importância",
-title="Indicadores que mais influenciam o risco educacional"
+title="• Indicadores que mais influenciam o risco educacional"
 )
+
+st.caption("""
+O gráfico a seguir mostra a **importância dos indicadores utilizados pelo modelo de Machine Learning para prever o risco educacional**.
+
+Cada barra representa o quanto um indicador contribui para a capacidade do modelo de identificar alunos em risco. 
+Indicadores com maior importância têm maior impacto na previsão e podem ser considerados fatores críticos para monitoramento e intervenção educacional.
+""")
 
 fig.update_traces(texttemplate='%{text:.2f}',textposition="outside")
 
