@@ -28,6 +28,14 @@ def load_data():
 df = load_data()
 
 # =============================
+# REMOVER DUPLICADOS
+# =============================
+df = df.drop_duplicates()
+
+# verificar valores faltantes
+df = df.replace(["", "NA", "-"], np.nan)
+
+# =============================
 # LIMPEZA
 # =============================
 
