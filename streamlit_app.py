@@ -105,10 +105,6 @@ df["Score Educacional"] = (
 
 st.header("Visão Geral dos Indicadores")
 
-st.caption("""
-Esta seção apresenta métricas gerais do programa educacional, incluindo número de alunos acompanhados e médias dos principais indicadores.
-""")
-
 col1,col2,col3,col4,col5 = st.columns(5)
 
 # alunos únicos
