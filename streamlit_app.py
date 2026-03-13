@@ -9,7 +9,7 @@ from sklearn.metrics import accuracy_score, classification_report
 
 st.set_page_config(layout="wide")
 
-st.title("Dashboard Educacional - Passos Mágicos")
+st.title("📊 Dashboard Educacional - Passos Mágicos")
 
 st.write("""
 Este dashboard apresenta uma análise dos indicadores educacionais dos alunos do programa **Passos Mágicos**.
@@ -111,7 +111,7 @@ fig = px.histogram(
     df,
     x="Pedra",
     color="Pedra",
-    title="Distribuição dos alunos por nível educacional"
+    title="• Distribuição dos alunos por nível educacional"
 )
 
 st.plotly_chart(fig,use_container_width=True)
@@ -131,7 +131,7 @@ fig = px.histogram(
     df,
     x="IAN",
     color="Pedra",
-    title="Distribuição da adequação educacional"
+    title="• Distribuição da adequação educacional"
 )
 
 st.plotly_chart(fig,use_container_width=True)
@@ -146,7 +146,7 @@ fig = px.histogram(
     df,
     x="Nivel Defasagem",
     color="Nivel Defasagem",
-    title="Níveis de defasagem educacional"
+    title="• Níveis de defasagem educacional"
 )
 
 st.plotly_chart(fig,use_container_width=True)
@@ -246,6 +246,10 @@ st.plotly_chart(fig,use_container_width=True)
 
 st.header("Notas Escolares")
 
+st.caption("""
+Comparação das notas nas disciplinas principais para identificar em quais áreas os alunos apresentam maior dificuldade.
+""")
+
 df_notas = df.melt(
     value_vars=["Matem","Portug","Inglês"],
     var_name="Disciplina",
@@ -257,7 +261,7 @@ fig = px.box(
     x="Disciplina",
     y="Nota",
     color="Disciplina",
-    title="Distribuição das notas por disciplina"
+    title="• Distribuição das notas por disciplina"
 )
 
 st.plotly_chart(fig,use_container_width=True)
@@ -276,7 +280,7 @@ fig = px.histogram(
     df,
     x="Score Educacional",
     color="Pedra",
-    title="Distribuição do score educacional"
+    title="• Distribuição do score educacional"
 )
 
 st.plotly_chart(fig,use_container_width=True)
@@ -286,6 +290,11 @@ st.plotly_chart(fig,use_container_width=True)
 # =========================================================
 
 st.header("Correlação entre Indicadores")
+
+st.caption("""
+A matriz de correlação mostra como os indicadores educacionais se relacionam entre si.
+Valores próximos de 1 indicam relação forte positiva.
+""")
 
 corr = df[["IEG","IPS","IDA","IPV","IAN"]].corr()
 
@@ -297,15 +306,18 @@ fig = px.imshow(
 
 st.plotly_chart(fig,use_container_width=True)
 
-# =========================================================
+# =============================
 # MACHINE LEARNING
-# =========================================================
+# =============================
 
 st.header("Previsão de Risco Educacional")
 
-df_ml = df.dropna(subset=["IAN","IEG","IPS","IDA","IPV"])
+st.caption("""
+Utilizamos um modelo de Machine Learning para identificar alunos com maior probabilidade
+de apresentar dificuldades educacionais.
+""")
 
-df_ml = df_ml.copy()
+df_ml = df.dropna(subset=["IAN","IEG","IPS","IDA","IPV"])
 
 df_ml["risco"] = (
 (df_ml["IAN"] < 5) |
@@ -335,6 +347,8 @@ acc = accuracy_score(y_test,pred)
 st.metric("Acurácia do modelo",round(acc,2))
 
 st.text(classification_report(y_test,pred))
+
+# importância das variáveis
 
 importance = pd.DataFrame({
 "Variável":features,
