@@ -9,16 +9,18 @@ from sklearn.metrics import accuracy_score, classification_report
 
 st.set_page_config(layout="wide")
 
-st.title("📊 Dashboard Educacional - Passos Mágicos")
+st.title("Dashboard Educacional - Passos Mágicos")
 
 st.write("""
 Este dashboard apresenta uma análise dos indicadores educacionais dos alunos do programa **Passos Mágicos**.
 Os gráficos exploram engajamento, desempenho acadêmico, fatores psicossociais e risco educacional.
+
+Criamos um score educacional agregando múltiplos indicadores para sintetizar o desempenho global do aluno e utilizamos o dataset PEDE para todo o desenvolvimento deste dashboard.
 """)
 
-# =============================
+# =========================================================
 # CARREGAR DADOS
-# =============================
+# =========================================================
 
 @st.cache_data
 def load_data():
@@ -27,22 +29,22 @@ def load_data():
 
 df = load_data()
 
-# =============================
-# REMOVER DUPLICADOS
-# =============================
-df = df.drop_duplicates()
-
-# verificar valores faltantes
-df = df.replace(["", "NA", "-"], np.nan)
-
-# =============================
-# LIMPEZA
-# =============================
+# =========================================================
+# TRATAMENTO DOS DADOS
+# =========================================================
 
 df.columns = df.columns.str.strip()
 
+# remover duplicados
+df = df.drop_duplicates()
+
+# padronizar valores vazios
+df = df.replace(["", "NA", "-"], np.nan)
+
+# unificar coluna Pedra
 df["Pedra"] = df["Pedra 22"].fillna(df["Pedra 21"]).fillna(df["Pedra 20"])
 
+# converter colunas numéricas
 cols_numericas = [
 "IAA","IEG","IPS","IDA","IPV","IAN","Matem","Portug","Inglês","INDE 22"
 ]
@@ -51,9 +53,35 @@ for col in cols_numericas:
     if col in df.columns:
         df[col] = pd.to_numeric(df[col], errors="coerce")
 
-# =============================
+# limitar indicadores entre 0 e 10
+indicadores = ["IAA","IEG","IPS","IDA","IPV","IAN"]
+
+for col in indicadores:
+    df[col] = df[col].clip(0,10)
+
+# =========================================================
+# CRIAÇÃO DE NOVAS VARIÁVEIS
+# =========================================================
+
+# nível de defasagem
+df["Nivel Defasagem"] = pd.cut(
+    df["IAN"],
+    bins=[0,4,7,10],
+    labels=["Alta defasagem","Defasagem moderada","Adequado"]
+)
+
+# score educacional geral
+df["Score Educacional"] = (
+    df["IEG"]*0.2 +
+    df["IPS"]*0.2 +
+    df["IDA"]*0.3 +
+    df["IPV"]*0.2 +
+    df["IAN"]*0.1
+)
+
+# =========================================================
 # VISÃO GERAL
-# =============================
+# =========================================================
 
 st.header("Visão Geral dos Indicadores")
 
@@ -64,9 +92,9 @@ col2.metric("INDE médio",round(df["INDE 22"].mean(),2))
 col3.metric("Engajamento médio",round(df["IEG"].mean(),2))
 col4.metric("Aprendizagem média",round(df["IDA"].mean(),2))
 
-# =============================
+# =========================================================
 # DISTRIBUIÇÃO DAS PEDRAS
-# =============================
+# =========================================================
 
 st.header("Distribuição das Pedras")
 
@@ -88,9 +116,9 @@ fig = px.histogram(
 
 st.plotly_chart(fig,use_container_width=True)
 
-# =============================
+# =========================================================
 # ADEQUAÇÃO AO NÍVEL
-# =============================
+# =========================================================
 
 st.header("Adequação ao nível (IAN)")
 
@@ -108,9 +136,24 @@ fig = px.histogram(
 
 st.plotly_chart(fig,use_container_width=True)
 
-# =============================
+# =========================================================
+# CLASSIFICAÇÃO DE DEFASAGEM
+# =========================================================
+
+st.header("Classificação de Defasagem Educacional")
+
+fig = px.histogram(
+    df,
+    x="Nivel Defasagem",
+    color="Nivel Defasagem",
+    title="Níveis de defasagem educacional"
+)
+
+st.plotly_chart(fig,use_container_width=True)
+
+# =========================================================
 # ENGAJAMENTO VS APRENDIZAGEM
-# =============================
+# =========================================================
 
 st.header("Engajamento vs Aprendizagem")
 
@@ -118,8 +161,6 @@ st.caption("""
 O **IEG (Indicador de Engajamento)** mede participação do aluno nas atividades.
 
 O **IDA (Indicador de Aprendizagem)** mede o desempenho acadêmico.
-
-O gráfico mostra se alunos mais engajados tendem a apresentar melhor desempenho.
 """)
 
 fig = px.scatter(
@@ -127,15 +168,14 @@ fig = px.scatter(
     x="IEG",
     y="IDA",
     color="Pedra",
-    opacity=0.6,
-    trendline="ols"
+    opacity=0.6
 )
 
 st.plotly_chart(fig,use_container_width=True)
 
-# =============================
+# =========================================================
 # AUTOAVALIAÇÃO VS DESEMPENHO
-# =============================
+# =========================================================
 
 st.header("Autoavaliação vs Desempenho")
 
@@ -150,8 +190,7 @@ fig = px.scatter(
     x="IAA",
     y="IDA",
     color="Pedra",
-    opacity=0.6,
-    trendline="ols"
+    opacity=0.6
 )
 
 fig.add_shape(
@@ -163,58 +202,49 @@ fig.add_shape(
 
 st.plotly_chart(fig,use_container_width=True)
 
-# =============================
+# =========================================================
 # INDICADOR PSICOSSOCIAL
-# =============================
+# =========================================================
 
 st.header("Indicador Psicossocial")
 
 st.caption("""
-O **IPS** mede fatores emocionais e sociais que influenciam o aprendizado,
-como motivação, ambiente familiar e bem-estar do aluno.
+O **IPS** mede fatores emocionais e sociais que influenciam o aprendizado.
 """)
 
 fig = px.box(
     df,
     x="Pedra",
     y="IPS",
-    color="Pedra",
-    title="Distribuição do indicador psicossocial por nível educacional"
+    color="Pedra"
 )
 
 st.plotly_chart(fig,use_container_width=True)
 
-# =============================
+# =========================================================
 # PONTO DE VIRADA
-# =============================
+# =========================================================
 
 st.header("Ponto de Virada")
 
 st.caption("""
 O **IPV (Indicador de Ponto de Virada)** identifica mudanças significativas no comportamento ou desempenho do aluno.
-
-Essas mudanças podem indicar melhora ou risco de queda no desempenho.
 """)
 
 fig = px.box(
     df,
     x="Atingiu PV",
     y="IDA",
-    color="Atingiu PV",
-    title="Relação entre ponto de virada e desempenho acadêmico"
+    color="Atingiu PV"
 )
 
 st.plotly_chart(fig,use_container_width=True)
 
-# =============================
+# =========================================================
 # NOTAS ESCOLARES
-# =============================
+# =========================================================
 
 st.header("Notas Escolares")
-
-st.caption("""
-Comparação das notas nas disciplinas principais para identificar em quais áreas os alunos apresentam maior dificuldade.
-""")
 
 df_notas = df.melt(
     value_vars=["Matem","Portug","Inglês"],
@@ -232,40 +262,50 @@ fig = px.box(
 
 st.plotly_chart(fig,use_container_width=True)
 
-# =============================
-# CORRELAÇÃO ENTRE INDICADORES
-# =============================
+# =========================================================
+# SCORE EDUCACIONAL
+# =========================================================
 
-st.header("Correlação entre Indicadores")
+st.header("Score Educacional Geral")
 
 st.caption("""
-A matriz de correlação mostra como os indicadores educacionais se relacionam entre si.
-Valores próximos de 1 indicam relação forte positiva.
+Combinação dos indicadores educacionais para avaliar o desempenho global do aluno.
 """)
+
+fig = px.histogram(
+    df,
+    x="Score Educacional",
+    color="Pedra",
+    title="Distribuição do score educacional"
+)
+
+st.plotly_chart(fig,use_container_width=True)
+
+# =========================================================
+# CORRELAÇÃO
+# =========================================================
+
+st.header("Correlação entre Indicadores")
 
 corr = df[["IEG","IPS","IDA","IPV","IAN"]].corr()
 
 fig = px.imshow(
     corr,
     text_auto=True,
-    color_continuous_scale="RdBu",
-    title="Correlação entre indicadores educacionais"
+    color_continuous_scale="RdBu"
 )
 
 st.plotly_chart(fig,use_container_width=True)
 
-# =============================
+# =========================================================
 # MACHINE LEARNING
-# =============================
+# =========================================================
 
 st.header("Previsão de Risco Educacional")
 
-st.caption("""
-Utilizamos um modelo de Machine Learning para identificar alunos com maior probabilidade
-de apresentar dificuldades educacionais.
-""")
-
 df_ml = df.dropna(subset=["IAN","IEG","IPS","IDA","IPV"])
+
+df_ml = df_ml.copy()
 
 df_ml["risco"] = (
 (df_ml["IAN"] < 5) |
@@ -296,8 +336,6 @@ st.metric("Acurácia do modelo",round(acc,2))
 
 st.text(classification_report(y_test,pred))
 
-# importância das variáveis
-
 importance = pd.DataFrame({
 "Variável":features,
 "Importância":model.feature_importances_
@@ -316,9 +354,9 @@ fig.update_traces(texttemplate='%{text:.2f}',textposition="outside")
 
 st.plotly_chart(fig,use_container_width=True)
 
-# =============================
+# =========================================================
 # INSIGHTS
-# =============================
+# =========================================================
 
 st.header("Insights")
 
