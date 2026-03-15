@@ -105,7 +105,7 @@ df = load_data()
 
 df.columns = df.columns.str.strip()
 
-df = df.drop_duplicates()
+df = df.drop_duplicates(subset=["RA","Ano"])
 
 df = df.replace(["","NA","-"],np.nan)
 
