@@ -528,3 +528,136 @@ corr2 = df[["IPS","IDA"]].corr().iloc[0,1]
 
 st.write("Correlação Engajamento x Desempenho:",round(corr1,2))
 st.write("Correlação Psicossocial x Desempenho:",round(corr2,2))
+
+st.divider()
+st.header("📊 Análise Estratégica dos Resultados — Case Passos Mágicos")
+
+st.markdown("""
+A análise dos dados apresentados no **Dashboard Educacional – Passos Mágicos** permite compreender de forma ampla como diferentes dimensões do desenvolvimento educacional dos alunos evoluem ao longo do tempo e como esses indicadores se relacionam entre si. A partir do conjunto de visualizações e métricas apresentadas nos gráficos, é possível avaliar a efetividade do programa educacional, identificar padrões de desempenho e engajamento, além de compreender fatores que influenciam o risco educacional.
+
+O painel inicia com a **Visão Geral dos Indicadores**, que sintetiza os principais números do dataset analisado. Observa-se que o programa acompanhou **1586 alunos**, com **2845 registros analisados**, o que indica que alguns estudantes possuem registros em diferentes anos ou avaliações ao longo do tempo.
+
+O **INDE médio (Índice de Desenvolvimento Educacional)** apresenta valor de **7,27**, indicando um desempenho geral relativamente positivo dentro da escala considerada. O **engajamento médio (IEG)** aparece com valor de **8,23**, sugerindo que os alunos demonstram alta participação nas atividades propostas pelo programa. Por outro lado, a **aprendizagem média (IDA)** apresenta valor de **6,38**, indicando que, apesar do alto engajamento, o desempenho acadêmico ainda apresenta espaço para evolução.
+""")
+
+st.subheader("1️⃣ Adequação ao nível educacional (IAN)")
+
+st.markdown("""
+O gráfico **“Adequação ao nível (IAN)”** permite compreender o perfil de defasagem educacional dos estudantes. Observa-se que uma parcela significativa dos alunos apresenta níveis intermediários de adequação, enquanto valores mais altos indicam maior proximidade com o nível esperado para a idade ou série escolar.
+
+Ao analisar o gráfico **“Classificação de Defasagem Educacional”**, percebe-se que a maioria dos estudantes se encontra na categoria de **defasagem moderada**, seguida pelo grupo considerado **adequado**, enquanto a **alta defasagem educacional** representa uma parcela relativamente pequena do total de alunos.
+
+Esse resultado indica que o programa atua principalmente com estudantes que apresentam algum atraso educacional, mas que ainda possuem potencial de recuperação dentro do processo pedagógico.
+""")
+
+st.subheader("2️⃣ Evolução do desempenho acadêmico (IDA)")
+
+st.markdown("""
+A evolução temporal dos indicadores pode ser observada no gráfico **“Evolução dos indicadores ao longo dos anos”**, que mostra o comportamento médio de diferentes métricas educacionais entre **2022, 2023 e 2024**.
+
+O **IDA (Indicador de Desempenho Acadêmico)** apresenta crescimento entre 2022 e 2023, seguido por uma leve redução em 2024, o que pode indicar desafios na manutenção do ritmo de aprendizagem ou mudanças no perfil dos alunos atendidos.
+
+A análise de desempenho acadêmico nas disciplinas aparece no gráfico **“Notas Escolares”**, que apresenta a distribuição das notas em **Matemática, Português e Inglês**. Observa-se que as três disciplinas apresentam distribuições semelhantes, embora Português e Inglês apresentem medianas ligeiramente superiores à de Matemática.
+
+Isso pode indicar que os alunos possuem maior facilidade nas disciplinas de linguagem em comparação com matemática.
+""")
+
+st.subheader("3️⃣ Engajamento nas atividades (IEG)")
+
+st.markdown("""
+No gráfico **“Evolução dos indicadores ao longo dos anos”**, o **IEG (Indicador de Engajamento)** apresenta valores altos em todos os anos, com leve crescimento entre 2022 e 2023 e pequena queda em 2024, embora ainda se mantenha elevado.
+
+A relação entre engajamento e aprendizagem pode ser observada no gráfico **“Engajamento x Aprendizagem”**, que apresenta uma dispersão entre o **IEG (engajamento)** e o **IDA (desempenho acadêmico)**.
+
+A visualização sugere uma tendência positiva entre as duas variáveis, indicando que alunos com maior engajamento tendem a apresentar melhores níveis de desempenho acadêmico.
+
+Entretanto, também é possível observar casos em que alunos apresentam alto engajamento, mas desempenho mais baixo, o que pode indicar dificuldades cognitivas, lacunas educacionais anteriores ou fatores externos que impactam o aprendizado.
+""")
+
+st.subheader("4️⃣ Autoavaliação dos alunos (IAA)")
+
+st.markdown("""
+Essa análise se aprofunda no gráfico **“Autoavaliação vs Desempenho”**, que compara o **IAA (Indicador de Autoavaliação)** com o **IDA (desempenho acadêmico)**.
+
+A linha de referência presente no gráfico representa o ponto em que percepção e desempenho real são equivalentes.
+
+Observa-se que muitos alunos se encontram próximos dessa linha, indicando que a percepção sobre o próprio desempenho é relativamente coerente com os resultados obtidos.
+
+Contudo, também existem casos de discrepância, em que alguns alunos apresentam autoavaliação elevada mesmo com desempenho mais baixo, enquanto outros apresentam desempenho elevado, mas percepção mais modesta sobre sua própria capacidade.
+""")
+
+st.subheader("5️⃣ Aspectos psicossociais (IPS)")
+
+st.markdown("""
+Os fatores emocionais e sociais são analisados no gráfico **“Indicador Psicossocial”**, que apresenta a distribuição do **IPS** entre as diferentes fases do programa.
+
+A análise por meio de boxplots mostra que alunos em fases mais avançadas, como **Topázio**, tendem a apresentar níveis psicossociais ligeiramente superiores, indicando maior estabilidade emocional, motivação ou suporte social.
+
+Isso pode sugerir que o desenvolvimento educacional também está associado ao fortalecimento de fatores psicossociais, reforçando a importância de abordagens educacionais que considerem não apenas o desempenho acadêmico, mas também aspectos emocionais e sociais.
+""")
+
+st.subheader("6️⃣ Ponto de Virada Educacional (IPV)")
+
+st.markdown("""
+O impacto do **Ponto de Virada (IPV)** pode ser observado no gráfico **“Ponto de Virada”**, que compara o desempenho acadêmico de alunos que atingiram ou não esse marco educacional.
+
+A distribuição mostra que estudantes que atingiram o ponto de virada apresentam **valores médios de IDA significativamente mais altos**, indicando que esse momento representa uma mudança positiva no comportamento ou na trajetória educacional do aluno.
+""")
+
+st.subheader("7️⃣ Evolução dos alunos nas fases do programa")
+
+st.markdown("""
+A distribuição dos alunos ao longo das fases do programa pode ser observada no gráfico **“Distribuição das Pedras”**, que representa os níveis de desenvolvimento educacional dos estudantes dentro do projeto.
+
+Nesse gráfico observa-se que a fase **Ametista** concentra o maior número de alunos, seguida pelas fases **Ágata** e **Topázio**, enquanto **Quartzo** apresenta menor quantidade.
+
+Essa distribuição sugere que grande parte dos estudantes se encontra em estágios intermediários de desenvolvimento educacional, indicando progressão educacional ao longo do programa.
+""")
+
+st.subheader("8️⃣ Score Educacional Geral")
+
+st.markdown("""
+A distribuição do **Score Educacional Geral** pode ser observada no gráfico correspondente, que mostra como o desempenho global se distribui entre as diferentes fases do programa.
+
+Nota-se que alunos em fases mais avançadas apresentam scores mais elevados, indicando evolução progressiva ao longo da trajetória educacional.
+""")
+
+st.subheader("9️⃣ Correlação entre indicadores educacionais")
+
+st.markdown("""
+A relação entre os diferentes indicadores é apresentada no gráfico **“Correlação entre Indicadores”**, que mostra a matriz de correlação entre IEG, IPS, IDA, IPV, IAN e IAA.
+
+Observa-se que o **IEG apresenta correlação moderada com IDA e IPV**, indicando que maior engajamento está associado a melhores resultados acadêmicos e maior probabilidade de atingir o ponto de virada.
+
+Já o **IPS apresenta correlação baixa com outros indicadores**, sugerindo que fatores psicossociais influenciam o processo educacional de maneira mais indireta.
+""")
+
+st.subheader("🔟 Previsão de risco educacional com Machine Learning")
+
+st.markdown("""
+A previsão de risco educacional foi realizada por meio de um modelo de **Machine Learning utilizando Random Forest**, apresentado na seção **“Previsão de Risco Educacional”**.
+
+O gráfico de importância das variáveis mostra que o **IDA (desempenho acadêmico)** possui peso significativamente maior no modelo, com importância de aproximadamente **0,80**, indicando que essa variável é a principal responsável pela identificação de alunos em risco educacional.
+
+Em seguida aparecem o **IPV (0,10)** e o **IEG (0,09)**, enquanto o **IPS apresenta importância muito baixa (0,01)**.
+
+Esse resultado indica que o desempenho acadêmico é o principal fator para prever risco de defasagem educacional.
+""")
+
+st.subheader("📈 Conclusão da análise")
+
+st.markdown("""
+Ao analisar todos os gráficos de forma integrada, é possível concluir que o programa Passos Mágicos apresenta impacto positivo na trajetória educacional dos alunos.
+
+Os dados indicam crescimento no número de estudantes atendidos, níveis elevados de engajamento e melhora gradual na adequação ao nível educacional esperado.
+
+A relação entre engajamento e desempenho acadêmico reforça a importância da participação ativa dos alunos nas atividades educacionais.
+
+De forma geral, os resultados indicam que o programa consegue promover evolução educacional ao longo do tempo, especialmente à medida que os alunos avançam pelas diferentes fases do projeto.
+
+Entretanto, ainda existem desafios relacionados à defasagem educacional moderada presente em parte significativa dos alunos e à necessidade de fortalecer o desempenho acadêmico para acompanhar o alto nível de engajamento observado.
+
+O uso de modelos preditivos e análises multidimensionais permite identificar alunos em risco de forma antecipada, possibilitando intervenções mais rápidas e eficazes.
+
+Dessa forma, a análise dos dados demonstra que a combinação de engajamento, acompanhamento pedagógico e suporte psicossocial constitui uma estratégia eficaz para transformar a trajetória educacional de crianças e jovens em situação de vulnerabilidade social.
+""")
